@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>foodIndex | 리스트</title>
+  <link rel="stylesheet" href="css/list.css" />
+</head>
+<body>
+
+  <!-- 상단 바 -->
+  <header class="list-topbar">
+    <div class="list-topbar-inner">
+
+      <!-- LEFT: 브랜드(홈/리스트로) -->
+      <div class="topbar-left">
+        <a href="./index.html" class="brand" aria-label="foodIndex 홈">foodIndex</a>
+      </div>
+
+      <!-- CENTER: 요약 -->
+      <div class="topbar-center list-heading">
+        <div id="summary" class="list-title">전체</div>
+        <div id="subSummary" class="list-sub">0곳</div>
+      </div>
+
+      <!-- RIGHT: 정렬 탭 + 프로필 + select(모바일용) -->
+      <div class="topbar-right sort-wrap">
+        <div class="sort-tabs" id="sortTabs">
+          <button type="button" class="tab active" data-sort="recent">최근 업데이트</button>
+          <button type="button" class="tab" data-sort="review_desc">리뷰 많은 순</button>
+          <button type="button" class="tab" data-sort="name_asc">가게명</button>
+        </div>
+
+        <a class="profile-dot" id="listProfileBtn" aria-label="프로필"></a>
+
+        <select id="sortSelect" class="sort-select" aria-label="정렬">
+          <option value="recent">최근 업데이트</option>
+          <option value="review_desc">리뷰 많은 순</option>
+          <option value="name_asc">가게명</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div id="chips" class="chips-row"></div>
+  </header>
+
+  <main class="list-page">
+    <div class="list-layout">
+
+      <aside class="side">
+        <div class="side-box">
+          <div class="side-title">필터</div>
+
+          <div class="side-section">
+            <div class="side-label">상황</div>
+            <div class="side-chips" id="sideSituationChips"></div>
+          </div>
+
+          <div class="side-section">
+            <div class="side-label">종류</div>
+            <div class="side-chips" id="sideFoodChips"></div>
+          </div>
+
+          <!-- ✅ 검색 섹션: 이제 실제로 검색 가능 -->
+          <div class="side-section">
+            <div class="side-label">검색</div>
+
+            <div class="side-search-row">
+              <input
+                id="sideSearchInput"
+                class="side-search-input"
+                type="text"
+                placeholder="가게명 · 동네 · 메뉴"
+                autocomplete="off"
+              />
+              <button id="sideSearchClear" type="button" class="side-search-clear" aria-label="검색어 지우기">×</button>
+            </div>
+
+            <div class="side-note">
+              Enter로 검색됩니다.
+            </div>
+          </div>
+
+          <button id="clearFilters" type="button" class="side-reset">필터 초기화</button>
+        </div>
+      </aside>
+
+      <section class="content">
+        <div id="cards"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <script type="module" src="./js/pages/list.page.js"></script>
+
+  <div id="filterDim" class="filter-dim" aria-hidden="true"></div>
+
+</body>
+</html>

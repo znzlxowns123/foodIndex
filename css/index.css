@@ -1,0 +1,359 @@
+/* =========================
+   Base
+========================= */
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #fafafa;
+  color: #222;
+}
+
+/* =========================
+   Hero
+========================= */
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 80px 20px 40px;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin: 0;
+}
+
+.home-logo{
+  color:#111;
+  text-decoration:none;
+  cursor:pointer;
+}
+.home-logo:hover{ opacity:.85; }
+
+/* =========================
+   Index: Top-right profile button (avatar)
+   - JS가 inline style로 background-image를 넣음
+   - CSS는 레이아웃/기본색/가림방지(z-index)만 담당
+========================= */
+.profile-btn{
+  position: fixed;
+  top: 28px;
+  right: 28px;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  overflow: hidden;
+
+  border: 1px solid rgba(0,0,0,0.12);
+
+  /* 비회원 기본: 검은 원 */
+  background-color: #111;
+  background-image: none;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+
+  /* ✅ 다른 요소에 가려지는 상황 방지 */
+  z-index: 9999;
+}
+
+.profile-btn:active{
+  transform: translateY(1px);
+}
+
+/* ✅ 로그인 후(아바타 있음): 검은 배경만 투명으로 */
+.profile-btn.has-avatar{
+  background-color: transparent;
+}
+
+/* ✅ 혹시 남아있을 수 있는 가상요소/오버레이 완전 차단 */
+.profile-btn::before,
+.profile-btn::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* =========================
+   Search
+========================= */
+.search-hero{
+  width: min(900px, 92vw);
+  margin: 28px auto 10px;
+  text-align: center;
+}
+
+.search-wrap{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.search-icon{
+  font-size: 18px;
+  opacity: 0.55;
+  user-select: none;
+}
+
+.search-input{
+  flex: 1;
+  border: 0;
+  outline: none;
+  font-size: 16px;
+  line-height: 1.2;
+  background: transparent;
+}
+
+.search-input::placeholder{
+  color: rgba(0,0,0,0.35);
+}
+
+.search-clear{
+  border: 0;
+  background: rgba(0,0,0,0.06);
+  border-radius: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.search-clear.is-on{
+  opacity: 1;
+  transform: scale(1);
+}
+
+.search-hint{
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: rgba(0,0,0,0.45);
+}
+
+/* =========================
+   Tag rows (situations / food chips)
+========================= */
+
+/* 상황 태그 줄 */
+.situations{
+  width: min(900px, 92vw);
+  margin: 14px auto 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}
+
+/* 음식 태그 섹션 */
+.food-tags{
+  width: min(900px, 92vw);
+  margin: 14px auto 0;
+}
+
+.food-tags-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin: 20px 2px 10px; /* 기존 중복 정리 */
+}
+
+.food-tags-head .label{
+  font-size: 13px;
+  color: rgba(0,0,0,0.55);
+}
+
+.food-tags-head .reset{
+  border: 0;
+  background: rgba(0,0,0,0.06);
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* ✅ 칩 wrapper 가운데 정렬 */
+.food-tag-chips{
+  display:flex;
+  justify-content: center;
+  flex-wrap:wrap;
+  gap: 10px;
+  max-height: 120px;
+  overflow: hidden;
+}
+
+/* =========================
+   Tag buttons
+========================= */
+.situations button,
+.food-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fff;
+}
+
+/* 상황 버튼 스타일 */
+.situations button{
+  border: 1px solid #ddd;
+}
+
+.situations button.active{
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
+
+/* 음식 칩 스타일 */
+.food-chip{
+  border: 1px solid rgba(0,0,0,0.12);
+  font-size: 14px;
+  line-height: 1;
+  gap: 8px;
+}
+
+.food-chip.active{
+  border-color: rgba(0,0,0,0.35);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   Region
+========================= */
+.region-wrap{
+  width:min(900px, 92vw);
+  margin: 22px auto 0;
+}
+
+.region-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+
+.region-breadcrumb{
+  font-weight:700;
+  color:#222;
+}
+
+.region-back{
+  border:1px solid #e6e6e6;
+  background:#fff;
+  border-radius:10px;
+  padding:8px 10px;
+  cursor:pointer;
+}
+
+.region-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+
+@media (min-width: 820px){
+  .region-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.region-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px 14px;
+  border:1px solid #eee;
+  background:#fff;
+  border-radius:14px;
+  cursor:pointer;
+  transition:transform .08s ease;
+}
+
+.region-card:hover{ transform: translateY(-1px); }
+
+.region-name{ font-weight:700; }
+.region-cnt{ color:#777; font-size:13px; }
+
+.region-sub{
+  margin-top:12px;
+  border:1px solid #eee;
+  background:#fff;
+  border-radius:14px;
+  padding:12px;
+}
+
+.sigungu-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.sigungu-chip{
+  border:1px solid #e6e6e6;
+  background:#fff;
+  border-radius:999px;
+  padding:10px 12px;
+  cursor:pointer;
+  font-size:14px;
+}
+.sigungu-chip:hover{
+  border-color:#cfcfcf;
+}
+
+/* =========================
+   Cards
+========================= */
+.cards {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 28px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+  margin: 0 0 6px;
+}
+
+.card .line {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.card .meta {
+  font-size: 13px;
+  color: #777;
+}
+
+/* =========================
+   Footer
+========================= */
+.footer {
+  text-align: center;
+  padding: 40px 20px 60px;
+  color: #888;
+  font-size: 14px;
+}

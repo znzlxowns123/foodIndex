@@ -1,0 +1,463 @@
+/* =========================
+   LIST PAGE (foodIndex)
+========================= */
+
+:root{
+  --bg:#fafafa;
+  --card:#fff;
+  --text:#111;
+  --muted:rgba(0,0,0,0.55);
+  --line:rgba(0,0,0,0.08);
+  --shadow:0 10px 30px rgba(0,0,0,0.06);
+}
+
+*,
+*::before,
+*::after{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* =========================
+   TOP BAR
+========================= */
+.list-topbar{
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(250,250,250,0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.list-topbar-inner{
+  width: min(1100px, 94vw);
+  margin: 0 auto;
+  padding: 16px 0 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+/* LEFT / CENTER / RIGHT (HTML 수정본 기준) */
+.topbar-left{
+  flex: 0 0 auto;
+  display:flex;
+  align-items:center;
+}
+
+.brand{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: -0.2px;
+  color: #111;
+  text-decoration: none;
+
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.06);
+
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.brand:hover{ background: rgba(0,0,0,0.09); }
+.brand:active{ transform: translateY(1px); }
+
+.topbar-center{
+  flex: 1 1 auto;
+  text-align: center;
+  min-width: 0;
+}
+
+.list-heading{
+  text-align: center;
+}
+
+.list-title{
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.list-sub{
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(0,0,0,0.5);
+}
+
+.topbar-right{
+  flex: 0 0 auto;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+/* =========================
+   SORT
+========================= */
+.sort-wrap{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+.sort-tabs{
+  display:flex;
+  gap: 8px;
+}
+
+.sort-tabs .tab{
+  border: 1px solid rgba(0,0,0,0.12);
+  background:#fff;
+  padding: 9px 12px;
+  border-radius: 999px;
+  cursor:pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color:#111;
+}
+
+.sort-tabs .tab.active{
+  background:#222;
+  color:#fff;
+  border-color:#222;
+}
+
+.sort-select{ display:none; }
+
+/* =========================
+   PROFILE DOT
+========================= */
+.profile-dot{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  border-radius:999px;
+  background:#111;
+  color:#fff;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+    background-image:none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* =========================
+   SELECTED CHIPS ROW
+========================= */
+.chips-row{
+  width: min(1100px, 94vw);
+  margin: 0 auto;
+  padding: 8px 0 14px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap: 8px;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+.list-page{
+  margin: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.list-layout{
+  display: flex;
+  align-items:flex-start;
+  gap: 24px;
+}
+
+/* 왼쪽 필터 폭 고정 (흔들림 방지) */
+.side{
+  flex: 0 0 280px;
+  width: 280px;
+  position: relative;
+  z-index: 5;
+}
+
+.side-box{
+  background:#fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+
+  position: sticky;
+  top: 92px; /* 상단바 아래 */
+}
+
+.content{
+  flex: 1 1 auto;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   SIDE FILTER
+========================= */
+.side-title{
+  font-weight:900;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.side-section{
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.side-section:first-of-type{
+  border-top: 0;
+  padding-top: 0;
+}
+
+.side-label{
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.side-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+
+/* 칩 클릭해도 크기/폭 안 흔들리게 */
+.side-chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  height: 34px;
+  padding: 0 12px;
+  line-height: 1;
+
+  border: 1px solid rgba(0,0,0,0.12);
+  background:#fff;
+  border-radius: 999px;
+  cursor:pointer;
+
+  font-size: 13px;
+  font-weight: 700;
+  color:#111;
+
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.side-chip.active{
+  background:#222;
+  color:#fff;
+  border-color:#222;
+  font-weight: 700;
+}
+
+.side-note{
+  font-size: 12px;
+  color: rgba(0,0,0,0.5);
+  line-height: 1.5;
+}
+
+.side-reset{
+  width: 100%;
+  margin-top: 14px;
+  border: 0;
+  background: rgba(0,0,0,0.06);
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.side-reset:hover{ background: rgba(0,0,0,0.09); }
+
+/* =========================
+   DIM (필터 오픈용)
+========================= */
+.filter-dim{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+  z-index: 40;
+}
+
+body.filter-open .filter-dim{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 860px){
+  .list-topbar-inner{
+    width: 92vw;
+  }
+
+  .topbar-center{
+    text-align: left;
+  }
+
+  .list-layout{
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .side{
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .side-box{
+    position: static;
+  }
+
+  .sort-tabs{ display:none; }
+
+  .sort-select{
+    display:block;
+    border: 1px solid rgba(0,0,0,0.12);
+    background:#fff;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-weight: 800;
+  }
+}
+
+@media (max-width: 520px){
+  .brand{
+    padding: 9px 12px;
+    font-size: 15px;
+  }
+}
+/* =========================
+   TOPBAR OVERRIDE (full width + brand not pill)
+   이 블록을 list.css 맨 아래에 붙여넣기
+========================= */
+
+/* 헤더를 컨테이너(1100)에서 풀고, 화면 좌우로 쓰기 */
+.list-topbar-inner{
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 16px 24px 10px !important;
+}
+
+/* chips-row도 동일하게 화면폭 기준으로 */
+.chips-row{
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 8px 24px 14px !important;
+  justify-content: flex-start !important; /* 칩 중앙정렬 싫으면 */
+}
+
+/* foodIndex를 '로고 텍스트'처럼: 알약(hover) 느낌 제거 */
+.brand{
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.4px !important;
+  line-height: 1 !important;
+}
+
+.brand:hover{
+  background: transparent !important;
+ 
+}
+
+/* 오른쪽 영역은 진짜 오른쪽 끝으로 밀착 */
+.topbar-right{
+  margin-left: auto !important;
+}
+
+/* 탭/프로필이 오른쪽 끝에서 살짝 안쪽으로만 오게(원하면) */
+.sort-wrap{
+  justify-content: flex-end !important;
+}
+.title{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+}
+
+.index{
+  font-size:13px;
+  font-weight:700;
+}
+
+/* 색상 규칙 */
+.idx-red{ color:#e53935; }     /* 4.0~5.0 */
+.idx-green{ color:#2e7d32; }   /* 3.3~3.9 */
+.idx-orange{ color:#f57c00; }  /* 2.5~3.2 */
+.idx-gray{ color:#9e9e9e; }    /* ~2.4 or 없음 */
+
+/* =========================
+   SIDE SEARCH (list sidebar)
+========================= */
+.side-search-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.side-search-input{
+  flex:1;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background:#fff;
+  font-size: 13px;
+  font-weight: 700;
+  color:#111;
+  outline: none;
+}
+
+.side-search-input::placeholder{
+  color: rgba(0,0,0,0.35);
+  font-weight: 700;
+}
+
+.side-search-clear{
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background:#fff;
+  cursor:pointer;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(0,0,0,0.55);
+}
+
+.side-search-clear:hover{
+  background: rgba(0,0,0,0.06);
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>foodIndex</title>
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+<header class="hero">
+  <button id="indexProfileBtn" class="profile-btn" type="button" aria-label="로그인/마이페이지"></button>
+  <h1><a href="index.html" class="home-logo">foodIndex</a></h1>
+</header>
+
+
+<section class="search-hero">
+  <div class="search-wrap">
+    <span class="search-icon" aria-hidden="true">⌕</span>
+    <input
+      id="searchInput"
+      class="search-input"
+      type="text"
+      placeholder="가게명 · 동네 · 메뉴로 검색"
+      autocomplete="off"
+    />
+    <button id="clearSearch" class="search-clear" type="button" aria-label="검색어 지우기">✕</button>
+  </div>
+  <p class="search-hint">예: “서초”, “라멘”, “한식”, “당산역”</p>
+</section>
+
+<!-- ✅ 상황(자동 렌더링) -->
+<section class="situations" id="situationChips"></section>
+<section class="region-wrap">
+  <div class="region-head">
+    <div class="region-breadcrumb" id="regionBreadcrumb">지역</div>
+    <button type="button" class="region-back" id="regionBack" style="display:none;">← 뒤로</button>
+  </div>
+
+  <div class="region-grid" id="regionGrid">
+    <!-- JS로 채움 -->
+  </div>
+
+  <div class="region-sub" id="regionSub" style="display:none;">
+    <!-- 시/도 클릭 후 구/군 목록 -->
+  </div>
+</section>
+
+<section class="food-tags">
+  <div class="food-tags-head">
+    <span class="label">종류</span>
+  </div>
+  <div id="foodTagChips" class="food-tag-chips"></div>
+</section>
+
+<section class="cards" id="cards"></section>
+
+<!-- ✅ 딱 한 번만, module로 -->
+<script type="module" src="./js/pages/index.page.js?v=20260120-2"></script>
+<footer class="footer">
+  <p>
+    기준은 한 사람이 책임집니다.<br>
+    그래서 적습니다.
+  </p>
+</footer>
+
+</body>
+
+</html>

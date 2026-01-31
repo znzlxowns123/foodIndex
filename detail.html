@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>foodIndex | Detail</title>
+  <link rel="stylesheet" href="./css/detail.css" />
+</head>
+
+<body>
+
+<header class="detail-header">
+  <!-- ✅ foodIndex = 홈으로 -->
+  <button class="back" id="backBtn" type="button">foodIndex</button>
+
+  <div class="header-actions">
+    <button data-action="report" data-auth="required" type="button">신고</button>
+    <button data-action="bookmark" data-auth="required" type="button">즐겨찾기</button>
+  </div>
+</header>
+
+<main class="detail">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-img" id="heroImg">
+    <div class="hero-placeholder" id="heroPlaceholder">사진 준비중</div>
+
+    <!-- ✅ 숨겨진 파일 input만 유지 -->
+    <input id="coverFile" type="file" accept="image/*" hidden />
+  </div>
+</section>
+
+
+
+  <!-- SUMMARY -->
+  <section class="summary">
+    <div class="title-row">
+      <h1 id="name" class="title"></h1>
+      <button id="bookmarkStar" class="bookmark-star" type="button" aria-label="즐겨찾기">☆</button>
+    </div>
+
+    <!-- ✅ 타베로그 느낌: 평균/리뷰수/인덱스를 작게 -->
+    <div id="miniScoreRow" class="mini-score-row"></div>
+
+    <div class="meta">
+      <span id="metaArea"></span>
+      <span class="dot">·</span>
+      <span id="metaCategory"></span>
+      <span class="dot">·</span>
+      <span id="metaPrice"></span>
+    </div>
+
+    <div class="fi-card">
+      <div class="fi-main">
+        <div class="fi-label">foodIndex 점수</div>
+        <div class="fi-score">
+          <span id="fiScore">—</span><small class="fi-unit">/5</small>
+        </div>
+        <div class="fi-sub"><span id="fiCount">0</span>개 리뷰 반영</div>
+      </div>
+
+      <div class="fi-confidence">
+        <div class="conf-head">
+          <span>평가 안정도</span>
+          <span id="fiConfText">0%</span>
+        </div>
+        <div class="conf-bar">
+          <div class="conf-fill" id="fiConfBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <!-- INFO -->
+  <section class="info">
+    <div class="intro" id="introBox">
+      아직 소개가 없어요. 리뷰가 쌓일수록 점수가 정교해집니다.
+    </div>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <span>주소</span>
+        <b id="addr">—</b>
+      </div>
+
+      <div class="info-item">
+        <div class="row-top">
+          <span>전화</span>
+          <button class="mini-btn" type="button" data-suggest="phone_public">정보 제보</button>
+        </div>
+        <b id="phone">—</b>
+      </div>
+
+      <div class="info-item">
+        <span>업태</span>
+        <b id="uptae">—</b>
+      </div>
+
+      <div class="info-item">
+        <span>가격</span>
+        <b id="price">가격 미정</b>
+      </div>
+
+      <div class="info-item">
+        <div class="row-top">
+          <span>영업시간</span>
+          <button class="mini-btn" type="button" data-suggest="open_hours_text">정보 제보</button>
+        </div>
+        <b id="hours">—</b>
+      </div>
+
+      <div class="info-item">
+        <div class="row-top">
+          <span>대표 메뉴</span>
+          <button class="mini-btn" type="button" data-suggest="menu_summary">정보 제보</button>
+        </div>
+        <b id="menu">—</b>
+      </div>
+    </div>
+
+    <div class="suggest-box" id="suggestBox" hidden>
+      <div class="suggest-head">
+        <b id="suggestTitle">정보 제보</b>
+        <button class="x-btn" type="button" id="suggestClose">✕</button>
+      </div>
+      <div class="suggest-body">
+        <div class="suggest-hint" id="suggestHint">가게 정보를 제보해 주세요.</div>
+        <input id="suggestInput" class="suggest-input" placeholder="내용을 입력" />
+        <button class="btn" type="button" id="suggestSubmit">제보하기</button>
+        <div class="suggest-foot">※ 초반에는 운영자가 직접 입력하고, 이후 Trusted 유저가 함께 채웁니다.</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn" id="mapBtn" target="_blank" rel="noreferrer">지도 열기</a>
+      <button class="btn outline" id="shareBtn" type="button">공유</button>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="review">
+    <div class="review-head">
+      <h2 class="review-title">리뷰</h2>
+
+      <div class="review-controls-row">
+        <div class="rc-left">
+          <label class="review-control">
+            <span class="rc-label">정렬</span>
+            <select id="reviewSort" class="rc-select">
+              <option value="recent" selected>최신순</option>
+              <option value="helpful">추천 많은순</option>
+              <option value="rating_desc">Index 높은순</option>
+              <option value="rating_asc">Index 낮은순</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="rc-right">
+          <label class="review-control rc-check">
+            <input id="reviewPhotoOnly" type="checkbox" />
+            <span>사진만</span>
+          </label>
+        </div>
+      </div>
+    </div><!-- ✅ 누락됐던 닫는 태그 -->
+
+    <div id="reviews" class="reviews"></div>
+
+    <form id="reviewForm" class="review-form">
+      <div class="rating-ui">
+        <div class="rating-top">
+          <div class="rating-label">Index</div>
+          <div class="rating-value"><span id="ratingValue">3.0</span></div>
+        </div>
+
+        <div class="rating-track">
+          <input id="ratingRange"
+                 class="rating-range"
+                 type="range"
+                 min="1.0" max="5.0" step="0.1" value="3.0"
+                 aria-label="점수 슬라이더" />
+        </div>
+
+        <div class="rating-bottom">
+          <div class="rating-cap" id="ratingCap" hidden>
+            <span class="lock"></span>
+            현재 등급에서는 <b id="capMaxText">3.5</b>점까지만 선택 가능
+          </div>
+
+          <div class="rating-direct">
+            <span class="direct-label">직접 입력</span>
+            <input id="ratingNumber"
+                   class="rating-number"
+                   type="text"
+                   inputmode="decimal"
+                   placeholder="3.0"
+                   value="3.0"
+                   aria-label="점수 직접 입력" />
+          </div>
+        </div>
+      </div>
+
+      <textarea id="reviewInput" placeholder="리뷰를 작성하세요 (최소 20자)" rows="4"></textarea>
+
+      <div class="photo-field" id="photoField">
+        <div class="photo-head">
+          <div class="photo-label">사진 첨부</div>
+          <div class="photo-help">최대 5장</div>
+        </div>
+
+        <input id="photoInput" class="photo-input" type="file" accept="image/*" multiple />
+
+        <label class="photo-drop" for="photoInput">
+          <div class="plus">+</div>
+          <div class="txt">
+            <b>사진을 추가해 주세요</b>
+            <span>최대 5장 (선택사항)</span>
+          </div>
+        </label>
+
+        <div id="photoPreview" class="photo-preview"></div>
+      </div>
+
+      <button type="submit" id="saveReviewBtn">저장</button>
+    </form>
+  </section>
+</main>
+
+<script type="module" src="./js/pages/detail.page.js?v=20260120_1443"></script>
+
+
+<div id="lightbox" class="lightbox" hidden aria-hidden="true">
+  <div class="lightbox-backdrop" data-lb="close"></div>
+
+  <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="사진 크게 보기">
+    <button class="lb-btn lb-close" type="button" data-lb="close" aria-label="닫기">✕</button>
+    <button class="lb-btn lb-prev" type="button" data-lb="prev" aria-label="이전">‹</button>
+
+    <img id="lbImg" class="lb-img" alt="review photo large" />
+
+    <button class="lb-btn lb-next" type="button" data-lb="next" aria-label="다음">›</button>
+    <div id="lbCount" class="lb-count">1 / 1</div>
+  </div>
+</div>
+
+</body>
+</html>

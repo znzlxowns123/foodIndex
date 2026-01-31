@@ -1,0 +1,887 @@
+:root{
+  --bg:#fafafa;
+  --card:#fff;
+  --text:#111;
+  --muted:#777;
+  --line:#eee;
+  --shadow:0 10px 30px rgba(0,0,0,0.06);
+
+  /* chip / button */
+  --chip-bg:#f3f4f6;
+  --chip-bd:#e6e7ea;
+  --chip-text:#111;
+  --chip-hover:#eceef2;
+
+  --radius-lg:18px;
+  --radius-md:16px;
+  --radius-sm:14px;
+}
+
+/* =========================
+   Base
+========================= */
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* =========================
+   Header (chips)
+========================= */
+.detail-header{
+  padding:18px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.back{
+  background:none;
+  border:none;
+  padding:0;
+  cursor:pointer;
+  color:#111;
+  font-weight:900;
+  font: inherit;
+}
+
+/* ✅ 칩 버튼 랩 */
+.header-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+/* ✅ 칩 버튼 공통 */
+.header-actions button{
+  border:1px solid var(--chip-bd);
+  background:var(--chip-bg);
+  color:var(--chip-text);
+  font-weight:900;
+  font-size:13px;
+  padding:8px 12px;
+  border-radius:999px;
+  cursor:pointer;
+  line-height:1;
+  transition:transform .06s ease, background .12s ease, border-color .12s ease;
+}
+.header-actions button:hover{
+  background:var(--chip-hover);
+  border-color:#d7d9df;
+}
+.header-actions button:active{
+  transform:translateY(1px);
+}
+.header-actions button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+/* =========================
+   Layout
+========================= */
+.detail{
+  max-width:860px;
+  margin:0 auto;
+  padding:0 22px 70px;
+  display:grid;
+  gap:18px;
+}
+
+/* HERO */
+.hero-img{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  background:#eee;
+  box-shadow:var(--shadow);
+  position:relative;
+}
+.hero-placeholder{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#777;
+  font-weight:900;
+}
+
+/* SUMMARY */
+.title-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.title{
+  margin:0 0 10px;
+  font-size:34px;
+  letter-spacing:-0.6px;
+}
+
+.meta{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#666;
+  font-size:15px;
+  margin:0 0 14px;
+}
+.dot{ opacity:.6; }
+
+/* bookmark star */
+.bookmark-star{
+  border:none;
+  background:transparent;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+  padding:6px 8px;
+  border-radius:10px;
+}
+.bookmark-star:hover{ background:#f3f3f3; }
+.bookmark-star.on{ color:orange; }
+
+/* score card */
+.fi-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.04);
+  margin-top:6px;
+}
+.fi-label{ font-size:13px; color:#777; font-weight:900; }
+.fi-score{
+  font-size:48px;
+  font-weight:900;
+  margin:6px 0;
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+}
+.fi-unit{ font-size:14px; color:#777; font-weight:800; }
+.fi-sub{ color:#666; font-size:14px; font-weight:700; }
+
+.fi-confidence{ margin-top:14px; }
+.conf-head{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  color:#666;
+  font-weight:800;
+}
+.conf-bar{
+  height:8px;
+  border-radius:999px;
+  background:#eee;
+  margin-top:8px;
+  overflow:hidden;
+}
+.conf-fill{
+  height:100%;
+  width:0%;
+  background:#111;
+  border-radius:999px;
+}
+
+/* chips */
+.chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.chip{
+  background:#f4f4f4;
+  border:1px solid #eee;
+  padding:8px 10px;
+  border-radius:999px;
+  font-size:13px;
+  color:#222;
+}
+
+/* =========================
+   INFO
+========================= */
+.intro{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:var(--radius-md);
+  padding:14px 16px;
+  line-height:1.7;
+}
+.info-grid{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.info-item{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:var(--radius-sm);
+  padding:12px 14px;
+}
+.row-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+}
+.info-item span{ display:block; font-size:12px; color:#777; font-weight:900; }
+.info-item b{ font-size:14px; color:#111; }
+
+.mini-btn{
+  border:1px solid #ddd;
+  background:#fff;
+  color:#111;
+  font-weight:900;
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  cursor:pointer;
+}
+.mini-btn:hover{ border-color:#cfcfcf; }
+
+.actions{ display:flex; gap:10px; margin-top:14px; }
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 14px;
+  border-radius:14px;
+  background:#111;
+  color:#fff;
+  font-weight:900;
+  border:1px solid #111;
+  text-decoration:none;
+  cursor:pointer;
+}
+.btn.outline{
+  background:#fff;
+  color:#111;
+  border:1px solid #ddd;
+}
+
+/* suggestion */
+.suggest-box{
+  margin-top:12px;
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:var(--radius-md);
+  padding:14px;
+}
+.suggest-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.x-btn{
+  border:none;
+  background:transparent;
+  font-size:16px;
+  cursor:pointer;
+  color:#777;
+}
+.suggest-hint{
+  font-size:12px;
+  color:#777;
+  margin-bottom:10px;
+  line-height:1.5;
+}
+.suggest-input{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid #e6e6e6;
+  border-radius:14px;
+  font-size:14px;
+  outline:none;
+  background:#fff;
+  margin-bottom:10px;
+}
+.suggest-foot{
+  margin-top:10px;
+  font-size:12px;
+  color:#888;
+  line-height:1.5;
+}
+
+/* =========================
+   REVIEWS
+========================= */
+.review-title{ margin:0 0 12px; font-size:20px; font-weight:1000; }
+.reviews{ display:grid; gap:10px; margin-bottom:14px; }
+
+.review-item{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:var(--radius-sm);
+  padding:12px 14px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.04);
+}
+.review-item .head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+  font-size:12px;
+  color:#666;
+}
+.review-item .user{ font-weight:1000; color:#222; }
+.review-item .right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.rating-chip{
+  font-size:12px;
+  color:#111;
+  background:#f3f3f3;
+  border:1px solid #eee;
+  border-radius:999px;
+  padding:6px 10px;
+  font-weight:900;
+}
+.review-item .text{
+  white-space:pre-wrap;
+  line-height:1.6;
+  font-size:14px;
+  color:#222;
+}
+
+/* 리뷰 사진 */
+.review-photos{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.review-photo{
+  width:86px;
+  height:86px;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,.10);
+  background:#f5f5f5;
+  display:block;
+}
+.review-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.actions-row{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+/* =========================
+   Review Form (cards unified)
+========================= */
+.review-form{ display:grid; gap:12px; }
+.review-form,
+.rating-ui,
+.photo-field{ width:100%; max-width:100%; }
+
+/* rating card */
+.rating-ui{
+  background:#fff;
+  border:1px solid #e9e9e9;
+  border-radius:var(--radius-md);
+  padding:18px;
+  overflow:hidden;
+}
+
+.rating-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+.rating-label{
+  font-size:12px;
+  color:#777;
+  font-weight:900;
+}
+.rating-value{
+  font-size:44px;
+  font-weight:1000;
+  line-height:1;
+  letter-spacing:-0.02em;
+  color:#111;
+  flex:0 0 auto;
+}
+
+.rating-track{ width:100%; margin:8px 0 10px; }
+.rating-range{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:28px;
+  background:transparent;
+  margin:0;
+  display:block;
+}
+.rating-range:focus{ outline:none; }
+.rating-range::-webkit-slider-runnable-track{
+  height:8px;
+  border-radius:999px;
+  background:linear-gradient(
+    to right,
+    #111 0%,
+    #111 var(--pct, var(--fill, 50%)),
+    #e9e9e9 var(--pct, var(--fill, 50%)),
+    #e9e9e9 100%
+  );
+}
+
+.rating-range::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:24px; height:24px;
+  border-radius:50%;
+  background:#111;
+  border:0;
+  box-shadow:0 8px 18px rgba(0,0,0,0.18);
+  cursor:pointer;
+  margin-top:-8px;
+}
+.rating-range::-moz-range-track{
+  height:8px;
+  border-radius:999px;
+  background:linear-gradient(
+    to right,
+    #111 0%,
+    #111 var(--pct, var(--fill, 50%)),
+    #e9e9e9 var(--pct, var(--fill, 50%)),
+    #e9e9e9 100%
+  );
+}
+.rating-range::-moz-range-thumb{
+  width:24px; height:24px;
+  border-radius:50%;
+  background:#111;
+  border:none;
+  box-shadow:0 8px 18px rgba(0,0,0,0.18);
+  cursor:pointer;
+}
+
+.rating-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.rating-cap{
+  font-size:13px;
+  color:#666;
+  font-weight:800;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.rating-direct{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-left:auto;
+}
+.direct-label{
+  font-size:13px;
+  color:#666;
+  font-weight:900;
+}
+.rating-number{
+  width:96px;
+  height:36px;
+  padding:0 10px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,0.12);
+  font-size:14px;
+  outline:none;
+  background:#fff;
+  text-align:right;
+}
+
+/* textarea card */
+#reviewInput{
+  width:100%;
+  border:1px solid #e9e9e9;
+  border-radius:var(--radius-md);
+  padding:16px;
+  background:#fff;
+  font-size:15px;
+  line-height:1.5;
+  resize:none;   /* ✅ 핸들 제거 */
+  min-height:120px;
+  outline:none;
+}
+#reviewInput:focus{ border-color:#cfcfcf; }
+
+/* photo card (naver-ish) */
+.photo-field{
+  border:1px solid #e9e9e9;
+  background:#fff;
+  border-radius:var(--radius-md);
+  padding:16px;
+}
+.photo-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+  gap:12px;
+}
+.photo-label{ font-size:12px; color:#777; font-weight:900; }
+.photo-help{ font-size:12px; color:#888; font-weight:800; }
+
+/* input hidden */
+.photo-input{
+  position:absolute;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden;
+  border:0;
+  clip:rect(0 0 0 0);
+}
+
+/* drop */
+.photo-drop{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  height:110px;
+  border:2px dashed #dadada;
+  border-radius:var(--radius-md);
+  background:#fafafa;
+  cursor:pointer;
+  user-select:none;
+  margin-top:10px;
+}
+.photo-drop:hover{ background:#f6f6f6; }
+.photo-drop .plus{
+  width:44px; height:44px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  font-size:26px;
+  border:1px solid #e7e7e7;
+  background:#fff;
+}
+.photo-drop .txt{ display:flex; flex-direction:column; line-height:1.2; }
+.photo-drop .txt b{ font-size:16px; }
+.photo-drop .txt span{ font-size:12px; color:#8a8a8a; }
+
+/* preview */
+.photo-preview{
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  gap:8px;
+  margin-top:12px;
+}
+.photo-preview .thumb{
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  background:#f2f2f2;
+  aspect-ratio:1 / 1;
+}
+.photo-preview .thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.photo-preview .thumb button{
+  position:absolute;
+  top:6px; right:6px;
+  width:22px; height:22px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.08);
+  background:rgba(255,255,255,.92);
+  cursor:pointer;
+  font-size:14px;
+  line-height:22px;
+  padding:0;
+}
+
+/* save button */
+#saveReviewBtn{
+  justify-self:start;
+  border:none;
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:1000;
+  background:#111;
+  color:#fff;
+  cursor:pointer;
+}
+#saveReviewBtn:disabled{ opacity:.6; cursor:not-allowed; }
+
+/* =========================
+   Lightbox
+========================= */
+.lightbox{ position:fixed; inset:0; z-index:9999; }
+.lightbox[hidden]{ display:none; }
+
+.lightbox-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,0.75); }
+
+.lightbox-panel{
+  position:relative;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+.lb-img{
+  max-width:min(92vw, 980px);
+  max-height:88vh;
+  border-radius:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.35);
+  background:#111;
+  object-fit:contain;
+}
+
+.lb-btn{
+  position:absolute;
+  border:none;
+  background:rgba(0,0,0,0.45);
+  color:#fff;
+  width:42px;
+  height:42px;
+  border-radius:999px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  font-weight:900;
+  user-select:none;
+}
+.lb-close{ top:18px; right:18px; font-size:18px; }
+.lb-prev{ left:18px; top:50%; transform:translateY(-50%); }
+.lb-next{ right:18px; top:50%; transform:translateY(-50%); }
+
+.lb-count{
+  position:absolute;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:13px;
+  font-weight:900;
+  color:#fff;
+  background:rgba(0,0,0,0.45);
+  padding:8px 12px;
+  border-radius:999px;
+}
+#lbImg{ user-select:none; -webkit-user-drag:none; }
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width:640px){
+  .detail{ padding:0 16px 70px; }
+  .title{ font-size:30px; }
+  .info-grid{ grid-template-columns:1fr; }
+  .rating-value{ font-size:38px; }
+
+  .detail-header{ padding:14px 16px; }
+  .lb-prev{ left:10px; }
+  .lb-next{ right:10px; }
+  .lb-close{ top:10px; right:10px; }
+  .photo-preview{ grid-template-columns:repeat(4, 1fr); }
+}
+/* =========================
+   Review vote buttons (👍👎)
+   - left bottom, inline
+   - no box / no outline
+========================= */
+.review-actions{
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.vote-btn{
+  border: none;
+  background: transparent;
+  padding: 6px 2px;
+  cursor: pointer;
+  font-weight: 900;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #111;
+}
+
+.vote-btn .count{
+  font-size: 14px;
+  color: #555;
+  font-weight: 900;
+}
+
+.vote-btn:hover{
+  opacity: .75;
+}
+
+.vote-btn:disabled{
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Review sort bar alignment
+   - keep current position, align to right
+========================= */
+.review-toolbar{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 8px 0 12px;
+}
+.review-controls-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:10px 0 12px;
+}
+
+.rc-left{ display:flex; align-items:center; gap:10px; }
+.rc-right{ display:flex; align-items:center; gap:10px; }
+
+.review-control{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+.rc-label{
+  font-size:13px;
+  color:#666;
+  font-weight:900;
+}
+
+.rc-select{
+  height:34px;
+  padding:0 10px;
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,0.12);
+  background:#fff;
+  font-weight:800;
+}
+
+.rc-check{
+  gap:8px;
+  font-size:13px;
+  color:#111;
+  font-weight:900;
+}
+
+.rc-check input{
+  width:16px;
+  height:16px;
+}
+.vote-btn{
+  border:0;
+  background:transparent;
+  padding:6px 8px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:1000;
+  font-size:14px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#111;
+}
+
+.vote-btn:hover{ background:#f3f3f3; }
+.vote-btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+.vote-btn.on{
+  background:#111;
+  color:#fff;
+}
+/* 리뷰 사진: 여백 자연스럽게 채우기(블러 배경 + 앞 원본) */
+.review-photo{
+  padding:0;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+}
+
+.review-photo .photo-frame{
+  width: 96px;     /* 필요하면 크기 조절 */
+  height: 96px;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  display: block;
+  background: #f2f2f2;
+}
+
+/* 뒤에 깔리는 블러 배경 */
+.review-photo .photo-frame::before{
+  content:"";
+  position:absolute;
+  inset:-24px;
+  background-image: var(--bg);
+  background-size: cover;
+  background-position: center;
+  filter: blur(16px);
+  transform: scale(1.2);
+  opacity: .95;
+}
+
+/* 앞의 실제 이미지 */
+.review-photo .photo-frame > img{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display:block;
+}
+
+/* review delete button restore */
+.delete-btn{
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  color: #111;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  line-height: 1;
+}
+.delete-btn:hover{
+  background: #f7f7f7;
+}
+.delete-btn:active{
+  transform: translateY(1px);
+}
+

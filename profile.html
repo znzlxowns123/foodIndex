@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>foodIndex | 프로필</title>
+  <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+
+  <!-- Topbar (최소/깔끔) -->
+  <header class="topbar" role="banner">
+
+    <!-- ✅ (1) 흰 동그라미: 리스트로 이동시키고 싶다 했으니 id 부여 -->
+    <button class="avatar-top" id="profileHomeBtn" type="button" aria-label="리스트로" title="리스트로"></button>
+
+    <!-- ✅ (2) 로그인/편집/로그아웃 등 "동적" 버튼 -->
+    <button id="profileActionBtn" class="btn" type="button">로그인</button>
+
+    <!-- ✅ (3) 뒤로가기 -->
+    <button class="icon-btn" id="backBtn" type="button" aria-label="뒤로가기" title="뒤로가기">
+      <!-- chevron-left -->
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="topbar-spacer" aria-hidden="true"></div>
+
+    <!-- 설정 -->
+    <button class="icon-btn" id="settingsBtn" type="button" aria-label="설정" title="설정">
+      <!-- gear -->
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M19.4 15a7.9 7.9 0 0 0 .1-1l2-1.2-2-3.4-2.3.7a8 8 0 0 0-1.7-1l-.3-2.4H10l-.3 2.4a8 8 0 0 0-1.7 1l-2.3-.7-2 3.4 2 1.2a8 8 0 0 0 .1 1 8 8 0 0 0-.1 1l-2 1.2 2 3.4 2.3-.7a8 8 0 0 0 1.7 1l.3 2.4h4.1l.3-2.4a8 8 0 0 0 1.7-1l2.3.7 2-3.4-2-1.2a7.9 7.9 0 0 0-.1-1Z"
+              fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <main class="wrap">
+
+    <!-- 1) Profile Header -->
+    <section class="card profile-head" id="profileHead">
+      <!-- ✅ 기존 avatar div 유지 + 내부에 img/input만 추가 -->
+      <div class="avatar" id="avatar" title="프로필 사진 변경">
+        <img
+          id="avatarImg"
+          alt="avatar"
+          style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:none;"
+        />
+        <input id="avatarInput" type="file" accept="image/*" style="display:none" />
+      </div>
+
+      <div class="who">
+        <div class="name-row">
+          <h1 class="nickname" id="nickname">me</h1>
+          <span class="mini" id="joinedAt">2026.01 가입</span>
+        </div>
+
+        <p class="bio" id="bio">첫 유저(테스트)</p>
+
+        <div class="public-summary" id="publicSummary">
+          <span class="pill ok">일관된 기준</span>
+          <span class="pill ok">과도한 5점 없음</span>
+          <span class="pill ok">협찬/대가 리뷰 없음</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2) Public Trust -->
+    <section class="card trust" id="trustCard">
+      <div class="trust-main">
+        <div class="trust-score" id="trustScore">-</div>
+        <div class="trust-status" id="trustStatus">-</div>
+      </div>
+      <div class="trust-sub" id="trustSub">-</div>
+    </section>
+
+    <!-- 3) Quick Stats -->
+    <section class="card stats" id="statsCard">
+      <div class="stat">
+        <div class="k">리뷰</div>
+        <div class="v" id="reviewCount">34</div>
+      </div>
+      <div class="stat">
+        <div class="k">도움됨</div>
+        <div class="v" id="helpfulCount">112</div>
+      </div>
+      <div class="stat">
+        <div class="k">즐겨찾기</div>
+        <div class="v" id="bookmarkCount">18</div>
+      </div>
+      <div class="stat">
+        <div class="k">신고</div>
+        <div class="v" id="reportCount">0</div>
+      </div>
+    </section>
+
+    <!-- 4) Trust History -->
+    <section class="card trust-history" id="trustHistoryCard">
+      <div class="card-head">
+        <h2>신뢰도 히스토리</h2>
+        <button class="ghost" id="trustHistoryToggleBtn" type="button" aria-expanded="false">
+          펼치기
+        </button>
+      </div>
+
+      <div class="trust-history-summary" id="trustHistorySummary">-</div>
+
+      <div class="trust-history-body" id="trustHistoryBody" hidden>
+        <ul class="trust-history-list" id="trustHistoryList"></ul>
+      </div>
+    </section>
+
+    <!-- 5) Taste / Style -->
+    <section class="card taste" id="tasteCard">
+      <div class="card-head">
+        <h2>취향 요약</h2>
+        <button class="ghost" id="tasteDetailBtn" type="button">자세히</button>
+      </div>
+
+      <div class="taste-row">
+        <div class="taste-block">
+          <div class="label">별점 성향</div>
+          <div class="chips" id="ratingStyleChips">
+            <span class="pill">보수적</span>
+            <span class="pill">5점 사용률 3%</span>
+            <span class="pill">3점=재방문 가능</span>
+          </div>
+        </div>
+
+        <div class="taste-block">
+          <div class="label">자주 먹는 카테고리</div>
+          <div class="chips" id="topFoodChips">
+            <span class="pill">라멘</span>
+            <span class="pill">야키토리</span>
+            <span class="pill">카페</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6) Tabs -->
+    <section class="card tabs" id="tabsCard">
+      <div class="tab-bar" role="tablist" aria-label="프로필 탭">
+        <button class="tab active" data-tab="reviews" type="button" role="tab" aria-controls="tab-reviews" aria-selected="true">리뷰</button>
+        <button class="tab" data-tab="bookmarks" type="button" role="tab" aria-controls="tab-bookmarks" aria-selected="false">즐겨찾기</button>
+        <button class="tab" data-tab="activity" type="button" role="tab" aria-controls="tab-activity" aria-selected="false">활동</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-reviews" role="tabpanel">
+        <div class="list" id="reviewsList"></div>
+        <button class="more" id="reviewsMoreBtn" type="button">더 보기</button>
+      </div>
+
+      <div class="tab-panel" id="tab-bookmarks" role="tabpanel" aria-hidden="true">
+        <div class="list" id="bookmarksList"></div>
+        <button class="more" id="bookmarksMoreBtn" type="button">더 보기</button>
+      </div>
+
+      <div class="tab-panel" id="tab-activity" role="tabpanel" aria-hidden="true">
+        <ul class="timeline" id="activityTimeline"></ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ✅ JS는 모듈만 유지 (inline script 제거) -->
+  <script type="module" src="./js/pages/profile.page.js"></script>
+
+</body>
+</html>

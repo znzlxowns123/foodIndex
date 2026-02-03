@@ -85,7 +85,9 @@ export async function fetchPlacesList({
   page = 1,
   limit = 20,
 }) {
-  const offset = (page - 1) * limit
+  const p = Number(page) || 1
+  const l = Number(limit) || 20
+  const offset = (p - 1) * l
 
   const sd = sanitizeKeyword(sido)
   const sg = sanitizeKeyword(sigungu)
@@ -97,7 +99,7 @@ export async function fetchPlacesList({
     let query = supabase
       .from('places_v2')
       .select('*', { count: 'exact' })
-      .range(offset, offset + limit - 1)
+      .range(offset, offset + l - 1)
 
     // ✅ 핵심: region은 ilike로 (서울특별시/경기도/부산광역시… 대응)
     if (sd) query = query.ilike('region_sido', `%${sd}%`)
@@ -128,7 +130,7 @@ export async function fetchPlacesList({
     let query = supabase
       .from('places_v2')
       .select('*', { count: 'exact' })
-      .range(offset, offset + limit - 1)
+      .range(offset, offset + l - 1)
 
     if (sd) query = query.ilike('region_sido', `%${sd}%`)
     if (sg) query = query.ilike('region_sigungu', `%${sg}%`)

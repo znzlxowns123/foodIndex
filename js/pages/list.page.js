@@ -497,85 +497,39 @@ async function loadNextPage(token) {
   try {
     if (token !== reqToken) return
 
-    // ✅ FIX: wantLabel(기존 코드 잔여 참조 방지) + wantFoodKey(정규화 비교)
-    const wantLabel = state.food ? displayFoodLabel(labelFood(state.food)) : ''
-    const wantFoodKey = state.food ? normalizeFoodKey(state.food) : ''
+    // ✅ (FIX) 서버 사이드 필터링을 위해 파라미터 준비
+    // food는 key(예: korean) 대신 label(예: 한식)을 보내야 DB ilike 검색이 잘 됨
+    const foodParam = state.food ? displayFoodLabel(labelFood(state.food)) : ''
 
-    const targetStart = (state.page - 1) * PAGE_SIZE
-    const targetEnd = targetStart + PAGE_SIZE
+    // ✅ (FIX) while 루프 제거하고 한 번만 호출
+    const res = await fetchPlacesList({
+      q: state.q,
+      sit: state.sit, // 서버로 전달
+      food: foodParam, // 서버로 전달
+      sort: state.sort,
+      sido: state.sido,
+      sigungu: state.sigungu,
+      page: state.page,
+      limit: PAGE_SIZE,
+    })
 
-    const BATCH = 5
+    const { rows, total } = unwrapFetchResult(res)
 
-    // ✅ (FIX 2) 캐시 복원: 객체 형태로 복원
-    const cachedRows = Array.isArray(rowsCache?.rows) ? rowsCache.rows : []
-    let collected = cachedRows.slice()
-    let scanOffset = Number(rowsCache?.scanOffset || 0)
+    if (token !== reqToken) return
 
-    while (collected.length < targetEnd) {
-      if (token !== reqToken) return
-
-      const fetchPage = Math.floor(scanOffset / BATCH) + 1
-
-      const res = await fetchPlacesList({
-        q: state.q,
-        sit: '', // ✅ 서버 sit 끔 (프론트에서 처리)
-        food: '',
-        sort: state.sort,
-        sido: state.sido,
-        sigungu: state.sigungu,
-        page: fetchPage,
-        limit: BATCH,
-      })
-
-      const { rows, total } = unwrapFetchResult(res)
-      const got = rows.length
-
-      if (Number.isFinite(total) && total > 0 && totalCount === 0) {
-        totalCount = total
-      }
-
-      if (got === 0) break
-
-      const normalized = normalizeRows(rows)
-
-      const wantSit = state.sit || ''
-
-      const filtered = normalized.filter((r) => {
-        // ✅ food 필터: 정규화된 키로 비교 (한식만 되는 문제 해결)
-        if (wantFoodKey) {
-          const c1 = normalizeFoodKey(r.category || '')
-          const c2 = normalizeFoodKey(r.food_category || '')
-          if (c1 !== wantFoodKey && c2 !== wantFoodKey) return false
-        }
-
-        // ✅ sit(상황) 필터: 프론트 tags 배열 기준
-        if (wantSit) {
-          const tags = Array.isArray(r.tags) ? r.tags : []
-          if (!tags.includes(wantSit)) return false
-        }
-
-        return true
-      })
-
-      collected = dedupeRows(collected.concat(filtered))
-
-      scanOffset += got
-      if (got < BATCH) break
+    if (Number.isFinite(total)) {
+      totalCount = total
     }
 
-    // ✅ (FIX 3) 캐시 저장: 배열에 속성 붙이지 말고 객체로 저장
-    rowsCache = { rows: collected, scanOffset }
+    const normalized = normalizeRows(rows)
+    // 서버에서 이미 필터링/정렬되어 오므로 추가 필터링 불필요
+    const pageRows = dedupeRows(normalized)
 
-    const pageRows = collected.slice(targetStart, targetEnd)
+    // 페이지 수 계산
+    totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0
+    if (totalPages === 0 && pageRows.length > 0) totalPages = 1 // fallback
 
-    if (!wantFoodKey) {
-      totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0
-    } else {
-      totalPages = Math.max(1, Math.ceil(collected.length / PAGE_SIZE))
-    }
-
-    // ✅ FIX: wantLabel 참조로 앱 죽는 것 방지 + food 있을 때도 header가 자연스럽게
-    renderHeader(!wantFoodKey && totalCount ? totalCount : collected.length)
+    renderHeader(totalCount)
 
     renderCards({ cardsEl, rows: pageRows })
     syncSideActive()

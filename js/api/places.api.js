@@ -38,6 +38,9 @@ export async function fetchPlacesList({
   const safeSido = String(sido || '').trim().slice(0, 50)
   const safeSigungu = String(sigungu || '').trim().slice(0, 50)
 
+  // ✅ 최적화: 필터가 하나도 없으면 전체 카운트(Scan)가 느리므로 estimated 사용
+  const hasFilters = safeQ || safeSit || safeFood || safeSido || safeSigungu
+
   // ✅ select: 기존에 쓰던 컬럼들 + 혼재 대비 region_ 컬럼도 함께
   const selectCols = `
     manage_no,
@@ -114,6 +117,8 @@ export async function fetchPlacesList({
 
   try {
     return await run('exact')
+    // 필터가 있으면 정확한 개수(exact), 없으면 빠른 추정치(estimated)
+    return await run(hasFilters ? 'exact' : 'estimated')
   } catch (e) {
     // timeout(57014) / 서버 500 등일 때 count 부담 줄여 재시도
     const code = e?.code || ''

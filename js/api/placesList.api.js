@@ -77,6 +77,7 @@ async function attachIndexScore(rows = []) {
  * - 동시에 {rows,total}로 받아도 되게 rowsWithScore.rows = rowsWithScore, rowsWithScore.total 제공
  */
 export async function fetchPlacesList({
+  q,
   sido,
   sigungu,
   food,
@@ -93,6 +94,7 @@ export async function fetchPlacesList({
   const sg = sanitizeKeyword(sigungu)
   const f = sanitizeKeyword(food)
   const s = sanitizeKeyword(sit)
+  const safeQ = sanitizeKeyword(q)
 
   // ✅ 1) primary (DB 컬럼 기준으로 확실히)
   async function runPrimary() {
@@ -104,6 +106,14 @@ export async function fetchPlacesList({
     // ✅ 핵심: region은 ilike로 (서울특별시/경기도/부산광역시… 대응)
     if (sd) query = query.ilike('region_sido', `%${sd}%`)
     if (sg) query = query.ilike('region_sigungu', `%${sg}%`)
+
+    // ✅ q 검색 추가
+    if (safeQ) {
+      const kw = `%${safeQ.replaceAll('%', '\\%').replaceAll('_', '\\_')}%`
+      query = query.or(
+        `place_name.ilike.${kw},address_road.ilike.${kw},address_jibun.ilike.${kw}`
+      )
+    }
 
     // ✅ food 로직(기존 유지: OR 검색)
     if (f) {
@@ -135,14 +145,21 @@ export async function fetchPlacesList({
     if (sd) query = query.ilike('region_sido', `%${sd}%`)
     if (sg) query = query.ilike('region_sigungu', `%${sg}%`)
 
+    if (safeQ) {
+      const kw = `%${safeQ.replaceAll('%', '\\%').replaceAll('_', '\\_')}%`
+      query = query.or(
+        `place_name.ilike.${kw},address_road.ilike.${kw},address_jibun.ilike.${kw}`
+      )
+    }
+
     if (f) {
       query = query.or(
         `food_category.ilike.%${f}%,hygiene_uptae.ilike.%${f}%,category.ilike.%${f}%`
       )
     }
 
-    // ✅ tags 문자열 대비: contains 대신 ilike
-    if (s) query = query.ilike('tags', `%${s}%`)
+    // ✅ tags 문자열 대비: contains 대신 ilike (filter로 캐스팅 명시)
+    if (s) query = query.filter('tags::text', 'ilike', `%${s}%`)
 
     if (sort === 'recent') query = query.order('created_at', { ascending: false })
     else if (sort === 'name_asc' || sort === 'name') query = query.order('place_name', { ascending: true })
@@ -156,7 +173,7 @@ export async function fetchPlacesList({
   // ✅ 실행: 1차 -> 0개면 2차
   let { data, count } = await runPrimary()
 
-  const hasFilters = Boolean(sd || sg || f || s)
+  const hasFilters = Boolean(sd || sg || f || s || safeQ)
   if (hasFilters && count === 0) {
     try {
       const fb = await runFallback()

@@ -79,7 +79,8 @@ export async function fetchPlacesList({
     // ✅ sit: tags가 jsonb 배열이면 contains / 문자열이면 ilike
     if (safeSit) {
       // tags.cs.{혼밥} (jsonb/text[] contains) OR tags ilike
-      query = query.or(`tags.cs.{${safeSit}},tags.ilike.%${safeSit}%`)
+      // ✅ FIX: .or() 내부 캐스팅(::) 문법 불가로 인한 파싱 에러 해결 -> contains만 사용
+      query = query.contains('tags', [safeSit])
     }
 
     // ✅ food: food_category / category / hygiene_uptae 어디든 걸리게

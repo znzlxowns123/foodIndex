@@ -143,16 +143,18 @@ const regionCache = {
 }
 
 async function fetchSidoCounts() {
-  const { data, error } = await supabase.from('place_region_counts').select('sido')
+  // ✅ 변경 포인트(1줄): VIEW -> MV
+  const { data, error } = await supabase.from('place_region_counts_mv').select('sido')
   if (error) throw error
   return [...new Set((data ?? []).map((r) => r.sido))]
 }
 
 async function fetchSigunguCounts(sido) {
   const { data, error } = await supabase
-    .from('place_region_counts')
+    .from('place_region_counts_sigungu_mv')
     .select('sigungu')
     .eq('sido', sido)
+
   if (error) throw error
   return [...new Set((data ?? []).map((r) => r.sigungu ?? '미분류'))]
 }

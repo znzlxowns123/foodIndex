@@ -1,3 +1,6 @@
+// js/api/places.api.js
+import { supabase } from './supabaseClient.js'
+
 export async function fetchPlacesList({
   q = '',
   sit = '',
@@ -134,4 +137,33 @@ export async function fetchPlacesList({
     console.error('[fetchPlacesList error]', e)
     throw e
   }
+}
+
+ async function fetchPlaceByManageNo(manageNo) {
+  const mn = String(manageNo ?? '').trim()
+  if (!mn) throw new Error('fetchPlaceByManageNo: manageNo is required')
+
+  const { data, error } = await supabase
+    .from('places_v2')
+    .select(
+      `
+      manage_no,
+      place_name,
+      address_road,
+      address_jibun,
+      category,
+      food_category,
+      hygiene_uptae,
+      tags,
+      region_sido,
+      region_sigungu,
+      sido,
+      sigungu
+      `
+    )
+    .eq('manage_no', mn)
+    .maybeSingle()
+
+  if (error) throw error
+  return data || null
 }

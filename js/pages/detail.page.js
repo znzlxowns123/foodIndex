@@ -1,7 +1,8 @@
 // js/pages/detail.page.js
 
 import { getNicknameFromUser } from '../utils/auth.util.js'
-import { fetchPlaceByManageNo } from '../api/places.api.js'
+import * as PlacesAPI from '../api/places.api.js'
+
 import { fetchReviewsByManageNo, insertReview, deleteReviewById } from '../api/reviews.api.js'
 import { fetchReviewPhotosMap, uploadReviewPhotos, deleteReviewImagesFromStorage } from '../api/reviewPhotos.api.js'
 import { voteReview } from '../api/votes.api.js'
@@ -167,11 +168,8 @@ createSuggestBox({
   suggestInputEl,
   suggestSubmitEl,
   suggestCloseEl,
-
-  // ✅ 제보 성공 즉시 화면 반영 + 새로고침 유지용 캐시 업데이트
   onSubmitted: async ({ field, value }) => {
     latestEdits = { ...(latestEdits || {}), [field]: value }
-
     if (field === 'phone_public' && phoneEl) phoneEl.textContent = value
     if (field === 'open_hours_text' && hoursEl) hoursEl.textContent = value
     if (field === 'menu_summary' && menuEl) menuEl.textContent = value
@@ -235,7 +233,7 @@ function refreshBookmarkStar() {
 bookmarkStarEl?.addEventListener('click', () => {
   if (!manageNo) return
   const set = getBookmarkSet()
-  if (set.has(manageNo)) set.delete(manNo)
+  if (set.has(manageNo)) set.delete(manageNo)
   else set.add(manageNo)
   saveBookmarkSet(set)
   refreshBookmarkStar()
@@ -792,6 +790,48 @@ suggestCloseEl?.addEventListener(
 )
 
 /* ---------------- init ---------------- */
+
+// ✅ 추가: places.api.js 안 건드리고도 “살아있는 함수”로 place 조회하기
+async function __fetchPlaceFallback(manageNo) {
+  const candidates = [
+    'fetchPlaceByManageNo',
+    'fetchPlaceByManageNoOrNull',
+    'fetchPlaceByManageNoSafe',
+    'fetchPlaceByManageNoV2',
+    'fetchPlaceById',
+    'fetchPlace',
+    'fetchPlaceDetail',
+    'fetchPlaceInfo',
+    'getPlaceByManageNo',
+    'getPlace',
+  ]
+
+  for (const key of candidates) {
+    const fn = PlacesAPI?.[key]
+    if (typeof fn === 'function') {
+      try {
+        const res = await fn(manageNo)
+        if (res) return res
+      } catch (e) {
+        // 다음 후보로 계속
+      }
+    }
+  }
+
+  // 마지막 보험: places.api.js export가 뭐든 없으면, 여기서만 직접 조회 (기존 기능 영향 없음)
+  const mn = String(manageNo ?? '').trim()
+  if (!mn) return null
+
+  const { data, error } = await supabase
+    .from('places_v2')
+    .select('manage_no, place_name, address_road, address_jibun, category, hygiene_uptae, tags')
+    .eq('manage_no', mn)
+    .maybeSingle()
+
+  if (error) throw error
+  return data || null
+}
+
 async function init() {
   console.log('manageNo =', manageNo)
 
@@ -803,7 +843,8 @@ async function init() {
   refreshBookmarkStar()
 
   try {
-    currentPlace = await fetchPlaceByManageNo(manageNo)
+    // ✅ 여기만 변경: export 이름이 뭐든 가게정보를 “무조건” 가져오게
+    currentPlace = await __fetchPlaceFallback(manageNo)
 
     try {
       latestEdits = await fetchLatestEditsMap(manageNo)
@@ -812,15 +853,16 @@ async function init() {
       latestEdits = {}
     }
 
-    await renderPlace(currentPlace)
-
-    // ✅ cover가 있으면 hero를 덮어쓰기 + hero 클릭 업로드 바인딩
-    await renderCoverPhotoIfExists()
-    bindHeroClickCoverUpload()
+    if (currentPlace) {
+      await renderPlace(currentPlace)
+      await renderCoverPhotoIfExists()
+      bindHeroClickCoverUpload()
+    } else {
+      nameEl.textContent = '가게 정보를 찾을 수 없어요'
+    }
   } catch (err) {
     console.error(err)
     nameEl.textContent = '가게 정보를 찾을 수 없어요'
-    return
   }
 
   await loadAndRenderReviews()

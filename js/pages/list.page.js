@@ -399,14 +399,19 @@ function ensureMoreBtn() {
     font-weight:700;
   `
   cardsEl?.parentElement?.appendChild(moreBtn)
-  moreBtn.addEventListener('click', () => loadNextPage(reqToken))
+  moreBtn.addEventListener('click', () => {
+  state.page += 1
+  updateUrl()
+  loadNextPage(reqToken)
+})
+
 }
 
 function setMoreVisible(on) {
   ensureMoreBtn()
-  // 🔧 FIX: 페이지 번호 모드에서는 더보기 숨김(코드는 유지)
-  moreBtn.style.display = 'none'
+  moreBtn.style.display = on ? 'block' : 'none'
 }
+
 function setMoreLoading(on) {
   if (!moreBtn) return
   moreBtn.disabled = on
@@ -529,12 +534,18 @@ async function loadNextPage(token) {
     totalPages = totalCount ? Math.ceil(totalCount / PAGE_SIZE) : 0
     if (totalPages === 0 && pageRows.length > 0) totalPages = 1 // fallback
 
-    renderHeader(totalCount)
+    renderHeader(Number.isFinite(totalCount) && totalCount > 0 ? totalCount : pageRows.length)
+
 
     renderCards({ cardsEl, rows: pageRows })
     syncSideActive()
     renderPager()
-    setMoreVisible(false)
+
+
+const totalKnown = Number.isFinite(totalCount) && totalCount > 0
+const canMore = !totalKnown && rows.length === PAGE_SIZE // 서버에서 20개 꽉 찼으면 다음도 있을 가능성 큼
+setMoreVisible(canMore)
+
   } catch (e) {
     console.error('[loadNextPage error]', e)
   } finally {

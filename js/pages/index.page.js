@@ -144,14 +144,15 @@ const regionCache = {
 
 async function fetchSidoCounts() {
   // ✅ 변경 포인트(1줄): VIEW -> MV
-  const { data, error } = await supabase.from('place_region_counts_mv').select('sido')
+  const { data, error } = await supabase.from('region_sido_mv').select('sido')
+
   if (error) throw error
   return [...new Set((data ?? []).map((r) => r.sido))]
 }
 
 async function fetchSigunguCounts(sido) {
   const { data, error } = await supabase
-    .from('place_region_counts_sigungu_mv')
+    .from('region_sigungu_mv')
     .select('sigungu')
     .eq('sido', sido)
 
@@ -221,6 +222,13 @@ async function goSido() {
 }
 
 async function goSigungu(sido) {
+  // ✅ 세종은 시군구 목록이 과도하게(도로명/동/리) 나오므로 단계 스킵 → 바로 리스트로
+  if (String(sido).includes('세종')) {
+    goList({ sido, sigungu: '' }) // sigungu 비우면 list에서 필터가 안 걸려서 세종 전체 조회
+    return
+  }
+
+  // ===== 기존 로직 그대로 =====
   regionState = { level: 'sigungu', sido }
   updateRegionHeader()
 
@@ -234,6 +242,7 @@ async function goSigungu(sido) {
 
   renderSigunguPanel(sido, regionCache.sigunguBySido.get(sido))
 }
+
 
 /* =========================
    Init

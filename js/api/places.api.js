@@ -1,6 +1,25 @@
 // js/api/places.api.js
 import { supabase } from './supabaseClient.js'
 
+// ✅ 리뷰 평점/개수 가져오기 (place_stats 뷰 활용)
+async function fetchPlaceStatsMap(manageNos) {
+  if (!manageNos || manageNos.length === 0) return new Map()
+  const uniqueIds = [...new Set(manageNos)]
+
+  const { data, error } = await supabase
+    .from('place_stats')
+    .select('place_manage_no, avg_rating, review_count')
+    .in('place_manage_no', uniqueIds)
+
+  if (error) return new Map()
+
+  const map = new Map()
+  data?.forEach((r) => {
+    map.set(r.place_manage_no, { avg: r.avg_rating, count: r.review_count })
+  })
+  return map
+}
+
 export async function fetchPlacesList({
   q = '',
   sit = '',
@@ -100,8 +119,18 @@ export async function fetchPlacesList({
     const { data, count, error } = await query
     if (error) throw error
 
+    // ✅ index_score 병합
+    const rows = data ?? []
+    const manageNos = rows.map((r) => r.manage_no).filter(Boolean)
+    const statsMap = await fetchPlaceStatsMap(manageNos)
+
+    const rowsWithStats = rows.map((r) => {
+      const stat = statsMap.get(r.manage_no)
+      return { ...r, index_score: stat?.avg ?? null, review_count: stat?.count ?? 0 }
+    })
+
     return {
-      rows: data ?? [],
+      rows: rowsWithStats,
       total: Number.isFinite(Number(count)) ? Number(count) : 0,
     }
   } catch (e) {

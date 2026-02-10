@@ -58,7 +58,8 @@ export async function fetchPlacesList({
     tags,
     region_sido,
     region_sigungu,
-    created_at
+    created_at,
+    updated_at
   `
 
   const escapeForIlike = (s) =>
@@ -72,9 +73,14 @@ export async function fetchPlacesList({
     const hasFilters = !!(safeQ || safeSit || safeFood || safeSido || safeSigungu)
     const countMode = hasFilters ? 'exact' : 'estimated'
 
-    let query = supabase
-      .from('places_v2')
-      .select(selectCols, { count: countMode })
+    let query = supabase.from('places_v2')
+
+    if (sort === 'review_desc') {
+      // ✅ DB 함수(review_count)를 가상 컬럼처럼 조회
+      query = query.select(`${selectCols}, review_count`, { count: countMode })
+    } else {
+      query = query.select(selectCols, { count: countMode })
+    }
 
     // ✅ 지역 필터: region_* 컬럼만 사용
     if (safeSido) {
@@ -102,14 +108,15 @@ export async function fetchPlacesList({
       )
     }
 
-    // ✅ 정렬 로직 통합 및 'recent' 기준 수정
-    if (sort === 'name_asc' || sort === 'name') {
+    if (sort === 'review_desc') {
+      // 리뷰 많은 순
+      query = query.order('review_count', { ascending: false })
+    } else if (sort === 'name_asc' || sort === 'name') {
+      // 가게명 오름차순
       query = query.order('place_name', { ascending: true })
-    } else if (sort === 'recent') {
-      query = query.order('created_at', { ascending: false })
     } else {
-      // 기본 정렬(최신순)
-      query = query.order('created_at', { ascending: false })
+      // 기본: 최근 업데이트 순 (updated_at desc)
+      query = query.order('updated_at', { ascending: false })
     }
 
     const from = Number(offset) || 0
